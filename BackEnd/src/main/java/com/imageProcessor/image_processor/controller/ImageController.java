@@ -19,27 +19,41 @@ import com.imageProcessor.image_processor.service.ImageService;
 @RestController
 @RequestMapping("/api/image")
 public class ImageController {
-    
+
     private final ImageService imageService;
 
-    // Injeção de dependência do serviço
     public ImageController(ImageService imageService) {
         this.imageService = imageService;
     }
 
     @PostMapping(value = "/process", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<byte[]> processImage(
-            @RequestParam("file") MultipartFile file,
-            @RequestParam("operation") String operation,
-            @RequestParam("value") int value) throws IOException {
+    public ResponseEntity<?> processImage(
+            @RequestParam(name = "file1", required = false) MultipartFile file1,
+            @RequestParam(name = "file2", required = false) MultipartFile file2,
+            @RequestParam(name = "operation", required = true) String operation,
+            @RequestParam(name = "value", required = false) String valueStr) throws IOException {
 
-        // Ler a imagem enviada
-        BufferedImage img = ImageIO.read(file.getInputStream());
+        if (file1 == null && file2 == null) {
+            return ResponseEntity.badRequest().body("Pelo menos um arquivo deve ser enviado.");
+        }
 
-        // Delegar para o serviço
-        BufferedImage result = imageService.processImage(img, operation, value);
+        int value = 0;
 
-        // Converter de volta para byte[]
+        if (valueStr != null && !valueStr.isBlank()) {
+            try {
+                value = Integer.parseInt(valueStr);
+            } catch (NumberFormatException e) {
+                return ResponseEntity
+                        .badRequest()
+                        .body("Valor inválido: deve ser um número inteiro.");
+            }
+        }
+
+        BufferedImage img1 = file1 != null ? ImageIO.read(file1.getInputStream()) : null;
+        BufferedImage img2 = file2 != null ? ImageIO.read(file2.getInputStream()) : null;
+
+        BufferedImage result = imageService.processImage(img1, img2, operation, value);
+
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ImageIO.write(result, "png", baos);
 

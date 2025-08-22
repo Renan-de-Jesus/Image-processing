@@ -6,21 +6,21 @@ import numpy as np
 import requests
 
 url = "http://localhost:8080/api/image/process"
-FilePath1 = None
-FilePath2 = None
+filePath1 = None
+filePath2 = None
 
 def OpenFile(validation):
-    global FilePath1, FilePath2
+    global filePath1, filePath2
     if validation == "1":
-        FilePath1 = filedialog.askopenfilename(
+        filePath1 = filedialog.askopenfilename(
             filetypes=[("Imagens", ".png .jpg .jpeg .bmp .tiff .gif")]
         )
-        FilePath = FilePath1
+        FilePath = filePath1
     elif validation == "2":
-        FilePath2 = filedialog.askopenfilename(
+        filePath2 = filedialog.askopenfilename(
             filetypes=[("Imagens", ".png .jpg .jpeg .bmp .tiff .gif")]
         )
-        FilePath = FilePath2
+        FilePath = filePath2
     else:
         return
 
@@ -59,36 +59,56 @@ def ValidateNumberInput(P):
     return False
 
 def ApplyEffect(effect, value):
-    global FilePath1, FilePath2
-
-    if not FilePath1 and not FilePath2:
+    global filePath1, filePath2
+        
+    if not filePath1 and not filePath2:
         print("Nenhuma imagem selecionada.")
         return
 
     files = {}
-    if FilePath1:
-        files["file1"] = open(FilePath1, "rb")
-    if FilePath2:
-        files["file2"] = open(FilePath2, "rb")
+    if filePath1:
+        files["file1"] = open(filePath1, "rb")
+    if filePath2:
+        files["file2"] = open(filePath2, "rb")
 
-    data = {"operation": effect, "value": str(value)}
+    data = {"operation": effect, "value": str(value) if value is not None else ""}
+    
+    if value is not None:
+        try:
+            response = requests.post(url, files=files, data=data)
 
-    try:
-        response = requests.post(url, files=files, data=data)
+            if response.status_code == 200:
+                img_data = response.content
+                img = Image.open(io.BytesIO(img_data))
+                img = img.resize((canvasResult.winfo_width(), canvasResult.winfo_height()), Image.Resampling.LANCZOS)
+                img_tk = ImageTk.PhotoImage(img)
+                canvasResult.delete("all")
+                canvasResult.create_image(0, 0, anchor="nw", image=img_tk)
+                canvasResult.image = img_tk
+            else:
+                print("Erro:", response.text)
+        finally:
+            for f in files.values():
+                f.close()
+    else:
+        value = 1
+        
+        try:
+            response = requests.post(url, files=files, data=data)
 
-        if response.status_code == 200:
-            img_data = response.content
-            img = Image.open(io.BytesIO(img_data))
-            img = img.resize((canvasResult.winfo_width(), canvasResult.winfo_height()), Image.Resampling.LANCZOS)
-            img_tk = ImageTk.PhotoImage(img)
-            canvasResult.delete("all")
-            canvasResult.create_image(0, 0, anchor="nw", image=img_tk)
-            canvasResult.image = img_tk
-        else:
-            print("Erro:", response.text)
-    finally:
-        for f in files.values():
-            f.close()
+            if response.status_code == 200:
+                img_data = response.content
+                img = Image.open(io.BytesIO(img_data))
+                img = img.resize((canvasResult.winfo_width(), canvasResult.winfo_height()), Image.Resampling.LANCZOS)
+                img_tk = ImageTk.PhotoImage(img)
+                canvasResult.delete("all")
+                canvasResult.create_image(0, 0, anchor="nw", image=img_tk)
+                canvasResult.image = img_tk
+            else:
+                print("Erro:", response.text)
+        finally:
+            for f in files.values():
+                f.close()
 
 root = CTk()
 root.title("CustomTkinter - Imagem Ajustada")

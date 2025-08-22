@@ -8,24 +8,27 @@ import java.io.IOException;
 
 @Service
 public class ImageService {
-        public BufferedImage processImage(BufferedImage img, String operation, int value) throws IOException {
+        public BufferedImage processImage(BufferedImage img1, BufferedImage img2, String operation, int value) throws IOException {
         ImageFilter filter = null;
+
+        if(img2 != null){
+            operation = "sumtwo";
+        }
 
         switch (operation.toLowerCase()) {
             case "sum":
                 filter = new Sum(value);
                 break;
-            case "grayscale":
-                //filter = new GrayscaleFilter();
+            case "sumtwo":;
                 break;
             default:
-                return img; // se não reconhecer, devolve igual
+                return img1;
         }
 
         if (filter != null) {
-            return filter.apply(img, value);
+            return filter.apply(img1, value);
         }
 
-        return img;
+        return img1;
     }
 }

@@ -33,4 +33,10 @@ public class Sum implements ImageFilter {
         }
         return out;
     }
+
+    @Override
+    public BufferedImage apply2(BufferedImage img, BufferedImage img2) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'apply2'");
+    }
 }
