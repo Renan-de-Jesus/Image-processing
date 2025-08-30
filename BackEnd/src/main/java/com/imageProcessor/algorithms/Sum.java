@@ -20,14 +20,17 @@ public class Sum implements ImageFilter {
                 int red = Math.min(255, c.getRed() + value);
                 int green = Math.min(255, c.getGreen() + value);
                 int blue = Math.min(255, c.getBlue() + value);
+                int alpha = Math.min(255, c.getAlpha() + value);
                 if(blue > 255) {
                     blue = 255;
                 }if(red > 255) {
                     red = 255;
                 }if(green > 255) {
                     green = 255;
+                }if(alpha > 255){
+                    alpha = 255;
                 }
-                Color nc = new Color(red, green, blue);
+                Color nc = new Color(red, green, blue, alpha);
                 out.setRGB(j, i, nc.getRGB());
             }
         }
@@ -36,7 +39,6 @@ public class Sum implements ImageFilter {
 
     @Override
     public BufferedImage apply2(BufferedImage img, BufferedImage img2) {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'apply2'");
     }
 }
