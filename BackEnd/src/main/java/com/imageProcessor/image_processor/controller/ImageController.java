@@ -26,6 +26,14 @@ public class ImageController {
         this.imageService = imageService;
     }
 
+    private BufferedImage resizeImage(BufferedImage original, int targetWidth, int targetHeight) {
+        BufferedImage resized = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
+        java.awt.Graphics2D g2d = resized.createGraphics();
+        g2d.drawImage(original, 0, 0, targetWidth, targetHeight, null);
+        g2d.dispose();
+        return resized;
+    }
+
     @PostMapping(value = "/process", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> processImage(
             @RequestParam(name = "file1", required = false) MultipartFile file1,
@@ -51,6 +59,10 @@ public class ImageController {
 
         BufferedImage img1 = file1 != null ? ImageIO.read(file1.getInputStream()) : null;
         BufferedImage img2 = file2 != null ? ImageIO.read(file2.getInputStream()) : null;
+
+        if (img1 != null && img2 != null) {
+            img2 = resizeImage(img2, img1.getWidth(), img1.getHeight());
+        }
 
         BufferedImage result = imageService.processImage(img1, img2, operation, value);
 

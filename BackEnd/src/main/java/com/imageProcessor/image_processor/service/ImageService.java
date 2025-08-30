@@ -8,27 +8,50 @@ import java.io.IOException;
 
 @Service
 public class ImageService {
-        public BufferedImage processImage(BufferedImage img1, BufferedImage img2, String operation, int value) throws IOException {
+
+    private BufferedImage convertToRGBA(BufferedImage original) {
+        if (original == null)
+            return null;
+
+        if (original.getType() == BufferedImage.TYPE_INT_ARGB) {
+            return original;
+        }
+
+        BufferedImage newImage = new BufferedImage(
+                original.getWidth(),
+                original.getHeight(),
+                BufferedImage.TYPE_INT_ARGB);
+        newImage.getGraphics().drawImage(original, 0, 0, null);
+        return newImage;
+    }
+
+    public BufferedImage processImage(BufferedImage img1, BufferedImage img2, String operation, int value)
+            throws IOException {
         ImageFilter filter = null;
 
-        if(img2 != null){
+        if (img2 != null) {
             operation = "sumtwo";
         }
+
+        img1 = convertToRGBA(img1);
+        img2 = convertToRGBA(img2);
 
         switch (operation.toLowerCase()) {
             case "sum":
                 filter = new Sum(value);
                 break;
-            case "sumtwo":;
+            case "sumtwo":
+                ;
+                filter = new SumTwo();
                 break;
             default:
                 return img1;
         }
 
-        if (filter != null) {
-            return filter.apply(img1, value);
+        if (img2 != null) {
+            return filter.apply2(img1, img2);
+        } else {
+            return img1;
         }
-
-        return img1;
     }
 }
