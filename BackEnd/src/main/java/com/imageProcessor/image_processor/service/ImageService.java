@@ -29,7 +29,7 @@ public class ImageService {
             throws IOException {
         ImageFilter filter = null;
 
-        if (img2 != null) {
+        if ((img2 != null) && (value == 0 )) {
             operation = "sumtwo";
         }
 
@@ -43,6 +43,9 @@ public class ImageService {
             case "sumtwo":
                 ;
                 filter = new SumTwo();
+                break;
+            case "negativo":
+                filter = new Negative();
                 break;
             default:
                 return img1;

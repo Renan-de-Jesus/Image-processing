@@ -134,6 +134,9 @@ OpenFileButton2.grid(row=2, column=1, padx=10, pady=10)
 sumButton = CTkButton(root, text="Somar", command=lambda: ApplyEffect("sum", inputSum.get()))
 sumButton.grid(row=3, column=0, padx=10, pady=10)
 
+sumButton = CTkButton(root, text="Negativo", command=lambda: ApplyEffect("negativo", inputSum.get()))
+sumButton.grid(row=4, column=0, padx=10, pady=10)
+
 inputSum = CTkEntry(root, width=40, height=30, placeholder_text="Valor máximo: 255", validate="key", validatecommand=(vcmd, "%P"))
 inputSum.grid(row=3, column=1, padx=10, pady=10)
 
