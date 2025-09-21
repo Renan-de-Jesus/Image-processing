@@ -58,6 +58,15 @@ def ValidateNumberInput(P):
         return int(P) <= 255
     return False
 
+def SaveFile(filename):
+    global currentResult
+    if currentResult is not None:
+        file_path = filedialog.asksaveasfilename(defaultextension=".png", filetypes=[("PNG files", "*.png"), ("All files", "*.*")])
+        if file_path:
+            currentResult.save(file_path)
+    else:
+        print("Nenhum resultado para salvar.")
+
 def ApplyEffect(effect, value=None):
     global currentImage1, currentImage2, currentResult
 
@@ -127,11 +136,16 @@ canvasResult.grid(row=1, column=2, padx=20, pady=20)
 
 OpenFileButton1 = CTkButton(root, text="Abrir Arquivo", command=lambda: OpenFile("1"))
 OpenFileButton1.grid(row=2, column=0, padx=10, pady=10)
+
 OpenFileButton2 = CTkButton(root, text="Abrir Arquivo", command=lambda: OpenFile("2"))
 OpenFileButton2.grid(row=2, column=1, padx=10, pady=10)
 
+SaveFileButton = CTkButton(root, text="Salvar Arquivo", command=lambda: SaveFile("result.png"))
+SaveFileButton.grid(row=2, column=2, padx=10, pady=10)
+
 sumButton = CTkButton(root, text="Somar", command=lambda: ApplyEffect("sum", inputSum.get()))
 sumButton.grid(row=3, column=0, padx=10, pady=10)
+
 negativeButton = CTkButton(root, text="Negativo", command=lambda: ApplyEffect("negative", 0))
 negativeButton.grid(row=4, column=0, padx=10, pady=10)
 
