@@ -1,10 +1,11 @@
 package com.imageProcessor.image_processor.service;
 
 import com.imageProcessor.algorithms.*;
+import com.imageProcessor.image_processor.util.ImageMatrix;
+
 import org.springframework.stereotype.Service;
 
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 @Service
 public class ImageService {
@@ -25,36 +26,24 @@ public class ImageService {
         return newImage;
     }
 
-    public BufferedImage processImage(BufferedImage img1, BufferedImage img2, String operation, int value)
-            throws IOException {
-        ImageFilter filter = null;
+    public ImageMatrix process(ImageMatrix img1, ImageMatrix img2, String operation, int value) {
 
-        if ((img2 != null) && (value == 0 )) {
+        if (value == 0 && img2 != null) {
             operation = "sumtwo";
         }
 
-        img1 = convertToRGBA(img1);
-        img2 = convertToRGBA(img2);
-
         switch (operation.toLowerCase()) {
-            case "sum":
-                filter = new Sum(value);
-                break;
+            case "negative":
+                return new Negative().apply(img1);
+
             case "sumtwo":
-                ;
-                filter = new SumTwo();
-                break;
-            case "negativo":
-                filter = new Negative();
-                break;
+                return new SumTwo().apply(img1, img2);
+
+            case "sum":
+                return new Sum().apply(img1, value);
+
             default:
                 return img1;
-        }
-
-        if (img2 != null) {
-            return filter.apply2(img1, img2);
-        } else {
-            return img1;
         }
     }
 }

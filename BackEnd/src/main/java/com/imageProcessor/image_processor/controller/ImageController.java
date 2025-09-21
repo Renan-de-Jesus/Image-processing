@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.imageProcessor.image_processor.service.ImageService;
+import com.imageProcessor.image_processor.util.ImageMatrix;
 
 @RestController
 @RequestMapping("/api/image")
@@ -57,17 +58,29 @@ public class ImageController {
             }
         }
 
-        BufferedImage img1 = file1 != null ? ImageIO.read(file1.getInputStream()) : null;
-        BufferedImage img2 = file2 != null ? ImageIO.read(file2.getInputStream()) : null;
+        BufferedImage image1 = ImageIO.read(file1.getInputStream());
+        BufferedImage image2 = file2 != null ? ImageIO.read(file2.getInputStream()) : null;
 
-        if (img1 != null && img2 != null) {
-            img2 = resizeImage(img2, img1.getWidth(), img1.getHeight());
+        if (image2 != null) {
+            int targetWidth = Math.min(image1.getWidth(), image2.getWidth());
+            int targetHeight = Math.min(image1.getHeight(), image2.getHeight());
+
+            if (image1.getWidth() != targetWidth || image1.getHeight() != targetHeight) {
+                image1 = resizeImage(image1, targetWidth, targetHeight);
+            }
+            if (image2.getWidth() != targetWidth || image2.getHeight() != targetHeight) {
+                image2 = resizeImage(image2, targetWidth, targetHeight);
+            }
         }
 
-        BufferedImage result = imageService.processImage(img1, img2, operation, value);
+        ImageMatrix img1 = ImageMatrix.fromBufferedImage(image1);
+        ImageMatrix img2 = ImageMatrix.fromBufferedImage(image2);
 
+        ImageMatrix resultMatrix = imageService.process(img1, img2, operation, value);
+
+        BufferedImage resultImage = resultMatrix.toBufferedImage();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(result, "png", baos);
+        ImageIO.write(resultImage, "png", baos);
 
         return ResponseEntity.ok()
                 .contentType(MediaType.IMAGE_PNG)

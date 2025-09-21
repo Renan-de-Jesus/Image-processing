@@ -1,35 +1,20 @@
 package com.imageProcessor.algorithms;
 
-import java.awt.Color;
-import java.awt.image.BufferedImage;
+import com.imageProcessor.image_processor.util.ImageMatrix;
 
-public class Negative implements  ImageFilter{
+public class Negative implements ImageFilter {
 
     @Override
-    public BufferedImage apply(BufferedImage img, int value) {
-        BufferedImage out = new BufferedImage(img.getWidth(), img.getHeight(), img.getType());
-        for (int i = 0; i < img.getHeight(); i++) {
-            for (int j = 0; j < img.getWidth(); j++) {
-                Color c = new Color(img.getRGB(j, i));
-                int red = Math.min(255, c.getRed());
-                int green = Math.min(255, c.getGreen());
-                int blue = Math.min(255, c.getBlue());
-                int alpha = Math.min(255, c.getAlpha());
-
-                red = 255 - red;
-                green = 255 - green;
-                blue = 255 - blue;
-                alpha = 255 - alpha;
-                
-                Color nc = new Color(red, green, blue, alpha);
-                out.setRGB(j, i, nc.getRGB());
+    public ImageMatrix apply(ImageMatrix img) {
+        ImageMatrix out = ImageMatrix.empty(img.getWidth(), img.getHeight());
+        for (int y = 0; y < img.getHeight(); y++) {
+            for (int x = 0; x < img.getWidth(); x++) {
+                out.r[y][x] = 255 - img.r[y][x];
+                out.g[y][x] = 255 - img.g[y][x];
+                out.b[y][x] = 255 - img.b[y][x];
+                out.a[y][x] = img.a[y][x];
             }
         }
         return out;
-    }
-
-    @Override
-    public BufferedImage apply2(BufferedImage img, BufferedImage img2) {
-        throw new UnsupportedOperationException("Unimplemented method 'apply2'");
     }
 }
