@@ -32,6 +32,10 @@ public class ImageService {
             operation = "sumtwo";
         }
 
+        if(img2 != null && ("subtraction".equalsIgnoreCase(operation) && value == 0)) {
+            operation = "subtractiontwo";
+        }
+
         switch (operation.toLowerCase()) {
             case "sum":
                 return new Sum().apply(img1, value);
@@ -39,6 +43,8 @@ public class ImageService {
                 return new SumTwo().apply(img1, img2);
             case "subtraction":
                 return new Subtraction().apply(img1, value);
+            case "subtractiontwo":
+                return new SubtractionTwo().apply(img1, img2);
             case "negative":
                 return new Negative().apply(img1);
 

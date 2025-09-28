@@ -1,6 +1,5 @@
 package com.imageProcessor.image_processor.util;
 
-import java.awt.Color;
 import java.awt.image.BufferedImage;
 
 public class ImageMatrix {
