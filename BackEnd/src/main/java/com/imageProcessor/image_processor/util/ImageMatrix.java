@@ -61,6 +61,7 @@ public class ImageMatrix {
     }
 
     public int getWidth() { return width; }
+    
     public int getHeight() { return height; }
 
     public static ImageMatrix empty(int width, int height) {

@@ -28,19 +28,19 @@ public class ImageService {
 
     public ImageMatrix process(ImageMatrix img1, ImageMatrix img2, String operation, int value) {
 
-        if (value == 0 && img2 != null) {
+        if (img2 != null && ("sum".equalsIgnoreCase(operation) && value == 0)) {
             operation = "sumtwo";
         }
 
         switch (operation.toLowerCase()) {
-            case "negative":
-                return new Negative().apply(img1);
-
-            case "sumtwo":
-                return new SumTwo().apply(img1, img2);
-
             case "sum":
                 return new Sum().apply(img1, value);
+            case "sumtwo":
+                return new SumTwo().apply(img1, img2);
+            case "subtraction":
+                return new Subtraction().apply(img1, value);
+            case "negative":
+                return new Negative().apply(img1);
 
             default:
                 return img1;

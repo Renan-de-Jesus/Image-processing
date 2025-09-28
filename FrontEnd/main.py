@@ -73,7 +73,7 @@ def ApplyEffect(effect, value=None):
     files = {}
     data = {"operation": effect, "value": str(value) if value is not None else ""}
 
-    if effect in ["sum", "subtract", "multiply", "divide"] and currentImage1 and currentImage2:
+    if effect in ["sum", "subtraction", "multiply", "divide"] and currentImage1 and currentImage2:
         buffer1 = io.BytesIO()
         currentImage1.save(buffer1, format="PNG")
         buffer1.seek(0)
@@ -146,10 +146,14 @@ SaveFileButton.grid(row=2, column=2, padx=10, pady=10)
 sumButton = CTkButton(root, text="Somar", command=lambda: ApplyEffect("sum", inputSum.get()))
 sumButton.grid(row=3, column=0, padx=10, pady=10)
 
+subtractionButton = CTkButton(root, text="Subtrair", command=lambda: ApplyEffect("subtraction", inputSum.get()))
+subtractionButton.grid(row=4, column=0, padx=10, pady=10)
+
 negativeButton = CTkButton(root, text="Negativo", command=lambda: ApplyEffect("negative", 0))
-negativeButton.grid(row=4, column=0, padx=10, pady=10)
+negativeButton.grid(row=5, column=0, padx=10, pady=10)
 
 inputSum = CTkEntry(root, width=40, height=30, placeholder_text="Valor máximo: 255", validate="key", validatecommand=(vcmd, "%P"))
 inputSum.grid(row=3, column=1, padx=10, pady=10)
 
 root.mainloop()
+
