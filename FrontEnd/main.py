@@ -143,17 +143,20 @@ OpenFileButton2.grid(row=2, column=1, padx=10, pady=10)
 SaveFileButton = CTkButton(root, text="Salvar Arquivo", command=lambda: SaveFile("result.png"))
 SaveFileButton.grid(row=2, column=2, padx=10, pady=10)
 
-sumButton = CTkButton(root, text="Somar", command=lambda: ApplyEffect("sum", inputSum.get()))
+sumButton = CTkButton(root, text="Somar", command=lambda: ApplyEffect("sum", inputValue.get()))
 sumButton.grid(row=3, column=0, padx=10, pady=10)
 
-subtractionButton = CTkButton(root, text="Subtrair", command=lambda: ApplyEffect("subtraction", inputSum.get()))
+subtractionButton = CTkButton(root, text="Subtrair", command=lambda: ApplyEffect("subtraction", inputValue.get()))
 subtractionButton.grid(row=4, column=0, padx=10, pady=10)
 
-negativeButton = CTkButton(root, text="Negativo", command=lambda: ApplyEffect("negative", 0))
+negativeButton = CTkButton(root, text="Multiplicar", command=lambda: ApplyEffect("multiplication", 0))
 negativeButton.grid(row=5, column=0, padx=10, pady=10)
 
-inputSum = CTkEntry(root, width=40, height=30, placeholder_text="Valor máximo: 255", validate="key", validatecommand=(vcmd, "%P"))
-inputSum.grid(row=3, column=1, padx=10, pady=10)
+negativeButton = CTkButton(root, text="Negativo", command=lambda: ApplyEffect("negative", 0))
+negativeButton.grid(row=6, column=0, padx=10, pady=10)
+
+inputValue = CTkEntry(root, width=120, height=30, placeholder_text="Valor máximo: 255", validate="key", validatecommand=(vcmd, "%P"),)
+inputValue.grid(row=3, column=1, padx=10, pady=10)
 
 root.mainloop()
 
