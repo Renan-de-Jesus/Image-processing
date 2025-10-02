@@ -49,6 +49,8 @@ public class ImageService {
                 return new Multiplication().apply(img1, value);
             case "negative":
                 return new Negative().apply(img1);
+            case "maximum":
+                return new Maximum().apply(img1);
 
             default:
                 return img1;
