@@ -55,6 +55,8 @@ public class ImageService {
                 return new GrayScale().apply(img1);
             case "fliplr":
                 return new FlipLR().apply(img1);
+            case "flipud":
+                return new FlipUD().apply(img1);
 
             default:
                 return img1;

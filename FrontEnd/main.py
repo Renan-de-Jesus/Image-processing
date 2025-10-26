@@ -164,6 +164,9 @@ negativeButton.grid(row=7, column=1, padx=10, pady=10)
 negativeButton = CTkButton(root, text="Flip Horizontal", command=lambda: ApplyEffect("fliplr", 0))
 negativeButton.grid(row=7, column=2, padx=10, pady=10)
 
+negativeButton = CTkButton(root, text="Flip Vertical", command=lambda: ApplyEffect("flipud", 0))
+negativeButton.grid(row=6, column=2, padx=10, pady=10)
+
 inputValue = CTkEntry(root, width=120, height=30, placeholder_text="Valor máximo: 255", validate="key", validatecommand=(vcmd, "%P"),)
 inputValue.grid(row=3, column=1, padx=10, pady=10)
 
