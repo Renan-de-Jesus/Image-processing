@@ -51,6 +51,8 @@ public class ImageService {
                 return new Division().apply(img1, value);
             case "negative":
                 return new Negative().apply(img1);
+            case "grayscale":
+                return new GrayScale().apply(img1);
 
             default:
                 return img1;

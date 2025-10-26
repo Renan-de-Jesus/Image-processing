@@ -7,14 +7,11 @@ public class Division implements ParametricImageFilter {
     public ImageMatrix apply(ImageMatrix img, int value) {
         ImageMatrix out = ImageMatrix.empty(img.getWidth(), img.getHeight());
         
-        // Evita divisão por zero
         if (value == 0) {
             value = 1;
         }
         
         double divisor = value / 100.0;
-        
-        // Se o divisor for muito pequeno, evita valores muito altos
         if (divisor == 0) {
             divisor = 0.01;
         }
