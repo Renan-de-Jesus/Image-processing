@@ -9,7 +9,7 @@ URL_API = "http://localhost:8080/api/image/process"
 CANVAS_WIDTH = 400
 CANVAS_HEIGHT = 300
 WINDOW_WIDTH = 1320
-WINDOW_HEIGHT = 700
+WINDOW_HEIGHT = 830
 
 # ==================== VARIÁVEIS GLOBAIS ====================
 filePath1 = None
@@ -53,21 +53,17 @@ def OpenFile(validation):
         currentImage2 = image.copy()
         currentResult = currentImage2.copy()
 
-    # Exibe a imagem no canvas
     DisplayImageOnCanvas(image, canvas)
 
 
 def DisplayImageOnCanvas(image, canvas):
-    """Redimensiona e exibe uma imagem em um canvas"""
     width_canvas = canvas.winfo_width()
     height_canvas = canvas.winfo_height()
     
-    # Fallback para dimensões padrão
     if width_canvas <= 1 or height_canvas <= 1:
         width_canvas = CANVAS_WIDTH
         height_canvas = CANVAS_HEIGHT
 
-    # Redimensiona e exibe
     image_redimensionada = image.resize(
         (width_canvas, height_canvas), 
         Image.Resampling.LANCZOS
@@ -101,7 +97,6 @@ def ApplyEffect(effect, value=None):
     """Aplica um efeito na(s) imagem(ns) através da API"""
     global currentImage1, currentImage2, currentResult
 
-    # Operações que precisam de duas imagens
     operations_with_two_images = ["sum", "subtraction", "multiply", "divide"]
     
     files = {}
@@ -110,7 +105,6 @@ def ApplyEffect(effect, value=None):
         "value": str(value) if value is not None else ""
     }
 
-    # Prepara os arquivos para envio
     if effect in operations_with_two_images and currentImage1 and currentImage2:
         files = PrepareTwoImages(currentImage1, currentImage2)
     elif currentImage1:
@@ -119,7 +113,6 @@ def ApplyEffect(effect, value=None):
         print("Nenhuma imagem disponível para aplicar o efeito.")
         return
 
-    # Envia requisição para API
     try:
         response = requests.post(URL_API, files=files, data=data)
         
@@ -130,14 +123,12 @@ def ApplyEffect(effect, value=None):
     except Exception as e:
         print(f"Erro ao processar imagem: {e}")
     finally:
-        # Fecha os buffers
         for file_tuple in files.values():
             if len(file_tuple) > 1:
                 file_tuple[1].close()
 
 
 def PrepareOneImage(image):
-    """Prepara uma imagem para envio"""
     buffer = io.BytesIO()
     image.save(buffer, format="PNG")
     buffer.seek(0)
@@ -145,7 +136,6 @@ def PrepareOneImage(image):
 
 
 def PrepareTwoImages(image1, image2):
-    """Prepara duas imagens para envio"""
     buffer1 = io.BytesIO()
     image1.save(buffer1, format="PNG")
     buffer1.seek(0)
@@ -161,7 +151,6 @@ def PrepareTwoImages(image1, image2):
 
 
 def DisplayResultImage(img_data):
-    """Exibe a imagem resultado no canvas"""
     global currentResult
     
     img = Image.open(io.BytesIO(img_data))
@@ -180,7 +169,6 @@ def DisplayResultImage(img_data):
 
 # ==================== VALIDAÇÃO ====================
 def ValidateNumberInput(P):
-    """Valida entrada numérica (0-255)"""
     if not P:
         return True
     if P.isdigit():
@@ -189,7 +177,6 @@ def ValidateNumberInput(P):
 
 
 # ==================== INTERFACE GRÁFICA ====================
-# Janela principal
 root = CTk()
 root.title("Image Processor")
 root.geometry(f"{WINDOW_WIDTH}x{WINDOW_HEIGHT}")
@@ -242,11 +229,9 @@ SaveFileButton.grid(row=2, column=2, padx=20, pady=5)
 controlFrame = CTkFrame(root)
 controlFrame.grid(row=3, column=0, columnspan=3, padx=20, pady=20, sticky="ew")
 
-# Label de seção - Operações Aritméticas
 labelArithmetic = CTkLabel(controlFrame, text="Operações Aritméticas", font=("Arial", 12, "bold"))
 labelArithmetic.grid(row=0, column=0, columnspan=2, pady=(10, 5))
 
-# Input de valor
 inputValue = CTkEntry(
     controlFrame, width=150, height=30, 
     placeholder_text="Valor (0-255)",
@@ -255,7 +240,6 @@ inputValue = CTkEntry(
 )
 inputValue.grid(row=1, column=0, columnspan=2, padx=10, pady=5)
 
-# Botões aritméticos em grid 2x2
 sumButton = CTkButton(
     controlFrame, text="Somar", 
     command=lambda: ApplyEffect("sum", inputValue.get()),
@@ -284,15 +268,12 @@ divisionButton = CTkButton(
 )
 divisionButton.grid(row=3, column=1, padx=5, pady=5)
 
-# Separador
 separator1 = CTkLabel(controlFrame, text="", height=20)
 separator1.grid(row=4, column=0, columnspan=2)
 
-# Label de seção - Transformações
 labelTransform = CTkLabel(controlFrame, text="Transformações", font=("Arial", 12, "bold"))
 labelTransform.grid(row=5, column=0, columnspan=2, pady=(5, 5))
 
-# Botões de transformação em grid 2x2
 negativeButton = CTkButton(
     controlFrame, text="Negativo", 
     command=lambda: ApplyEffect("negative", 0),
@@ -321,5 +302,4 @@ flipVerticalButton = CTkButton(
 )
 flipVerticalButton.grid(row=7, column=1, padx=5, pady=(5, 10))
 
-# Inicia o loop da interface
 root.mainloop()
