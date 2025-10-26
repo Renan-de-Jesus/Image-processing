@@ -47,6 +47,8 @@ public class ImageService {
                 return new SubtractionTwo().apply(img1, img2);
             case "multiplication":
                 return new Multiplication().apply(img1, value);
+            case "division":
+                return new Division().apply(img1, value);
             case "negative":
                 return new Negative().apply(img1);
 

@@ -149,11 +149,14 @@ sumButton.grid(row=3, column=0, padx=10, pady=10)
 subtractionButton = CTkButton(root, text="Subtrair", command=lambda: ApplyEffect("subtraction", inputValue.get()))
 subtractionButton.grid(row=4, column=0, padx=10, pady=10)
 
-negativeButton = CTkButton(root, text="Multiplicar", command=lambda: ApplyEffect("multiplication", 0))
+negativeButton = CTkButton(root, text="Multiplicar", command=lambda: ApplyEffect("multiplication", inputValue.get()))
 negativeButton.grid(row=5, column=0, padx=10, pady=10)
 
-negativeButton = CTkButton(root, text="Negativo", command=lambda: ApplyEffect("negative", 0))
+negativeButton = CTkButton(root, text="Dividir", command=lambda: ApplyEffect("division", inputValue.get()))
 negativeButton.grid(row=6, column=0, padx=10, pady=10)
+
+negativeButton = CTkButton(root, text="Negativo", command=lambda: ApplyEffect("negative", 0))
+negativeButton.grid(row=7, column=0, padx=10, pady=10)
 
 inputValue = CTkEntry(root, width=120, height=30, placeholder_text="Valor máximo: 255", validate="key", validatecommand=(vcmd, "%P"),)
 inputValue.grid(row=3, column=1, padx=10, pady=10)
