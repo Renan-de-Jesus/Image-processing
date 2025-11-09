@@ -322,6 +322,13 @@ tresholdButton = CTkButton(
 )
 tresholdButton.grid(row=9, column=1, padx=5, pady=(5, 10))
 
+histogramButton = CTkButton(
+    controlFrame, text="Histograma", 
+    command=lambda: ApplyEffect("histogram", 0),
+    width=150
+)
+histogramButton.grid(row=9, column=2, padx=5, pady=(5, 10))
+
 separator2 = CTkLabel(controlFrame, text="", height=20)
 separator2.grid(row=10, column=0, columnspan=2)
 
