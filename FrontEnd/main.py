@@ -339,4 +339,11 @@ xorButton = CTkButton(
 )
 xorButton.grid(row=3, column=2, padx=5, pady=(5, 5))
 
+orButton = CTkButton(
+    controlFrame, text="OR", 
+    command=lambda: ApplyEffect("or", 0),
+    width=150
+)
+orButton.grid(row=3, column=3, padx=5, pady=(5, 5))
+
 root.mainloop()

@@ -69,6 +69,8 @@ public class ImageService {
                 return new NotOperation().apply(img1);
             case "xor":
                 return new XorOperation().apply(img1, img2);
+            case "or":
+                return new OrOperation().apply(img1, img2);
             default:
                 return img1;
         }
