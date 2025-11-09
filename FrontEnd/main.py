@@ -90,7 +90,7 @@ def ApplyEffect(effect, value=None):
     """Aplica um efeito na(s) imagem(ns) através da API"""
     global currentImage1, currentImage2, currentResult
 
-    operations_with_two_images = ["sum", "subtraction", "multiply", "divide", "difference", "blending", "media", "and"]
+    operations_with_two_images = ["sum", "subtraction", "multiply", "divide", "difference", "blending", "media", "and", "or", "xor"]
     
     files = {}
     data = {
@@ -331,5 +331,12 @@ notButton = CTkButton(
     width=150
 )
 notButton.grid(row=2, column=3, padx=5, pady=(5, 5))
+
+xorButton = CTkButton(
+    controlFrame, text="XOR", 
+    command=lambda: ApplyEffect("xor", 0),
+    width=150
+)
+xorButton.grid(row=3, column=2, padx=5, pady=(5, 5))
 
 root.mainloop()
