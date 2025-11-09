@@ -4,26 +4,22 @@ from tkinter import filedialog
 from PIL import Image, ImageTk
 import requests
 
-# ==================== CONFIGURAÇÕES ====================
 URL_API = "http://localhost:8080/api/image/process"
 CANVAS_WIDTH = 400
 CANVAS_HEIGHT = 300
 WINDOW_WIDTH = 1320
 WINDOW_HEIGHT = 830
 
-# ==================== VARIÁVEIS GLOBAIS ====================
 filePath1 = None
 filePath2 = None
 currentImage1 = None
 currentImage2 = None
 currentResult = None
 
-# ==================== FUNÇÕES DE ARQUIVO ====================
 def OpenFile(validation):
     """Abre um arquivo de imagem e exibe no canvas apropriado"""
     global filePath1, filePath2, currentImage1, currentImage2, currentResult
     
-    # Determina qual arquivo abrir
     if validation == "1":
         filePath1 = filedialog.askopenfilename(
             filetypes=[("Imagens", ".png .jpg .jpeg .bmp .tiff .gif")]
@@ -42,10 +38,8 @@ def OpenFile(validation):
     if not FilePath:
         return
 
-    # Carrega a imagem
     image = Image.open(FilePath)
 
-    # Atualiza as variáveis globais
     if validation == "1":
         currentImage1 = image.copy()
         currentResult = currentImage1.copy()
@@ -92,7 +86,6 @@ def SaveFile(filename):
         currentResult.save(file_path)
 
 
-# ==================== FUNÇÕES DE PROCESSAMENTO ====================
 def ApplyEffect(effect, value=None):
     """Aplica um efeito na(s) imagem(ns) através da API"""
     global currentImage1, currentImage2, currentResult
@@ -167,7 +160,6 @@ def DisplayResultImage(img_data):
     currentResult = img
 
 
-# ==================== VALIDAÇÃO ====================
 def ValidateNumberInput(P):
     if not P:
         return True
