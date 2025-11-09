@@ -59,6 +59,8 @@ public class ImageService {
                 return new FlipUD().apply(img1);
             case "difference":
                 return new Difference().apply(img1, img2);
+            case "blending":
+                return new Blending().apply(img1, img2, value);
             default:
                 return img1;
         }
