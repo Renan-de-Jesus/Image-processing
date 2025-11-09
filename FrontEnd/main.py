@@ -90,7 +90,7 @@ def ApplyEffect(effect, value=None):
     """Aplica um efeito na(s) imagem(ns) através da API"""
     global currentImage1, currentImage2, currentResult
 
-    operations_with_two_images = ["sum", "subtraction", "multiply", "divide"]
+    operations_with_two_images = ["sum", "subtraction", "multiply", "divide", "difference"]
     
     files = {}
     data = {
@@ -293,5 +293,12 @@ flipVerticalButton = CTkButton(
     width=150
 )
 flipVerticalButton.grid(row=7, column=1, padx=5, pady=(5, 10))
+
+differenceButton = CTkButton(
+    controlFrame, text="Diferença", 
+    command=lambda: ApplyEffect("difference", 0),
+    width=150
+)
+differenceButton.grid(row=8, column=0, padx=5, pady=(5, 10))
 
 root.mainloop()

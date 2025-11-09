@@ -57,7 +57,8 @@ public class ImageService {
                 return new FlipLR().apply(img1);
             case "flipud":
                 return new FlipUD().apply(img1);
-
+            case "difference":
+                return new Difference().apply(img1, img2);
             default:
                 return img1;
         }
