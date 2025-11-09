@@ -4,16 +4,20 @@ import org.springframework.http.MediaType;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.imageProcessor.algorithms.Histogram;
 import com.imageProcessor.image_processor.service.ImageService;
 import com.imageProcessor.image_processor.util.ImageMatrix;
 
@@ -22,6 +26,7 @@ import com.imageProcessor.image_processor.util.ImageMatrix;
 public class ImageController {
 
     private final ImageService imageService;
+    private Histogram lastHistogram;
 
     public ImageController(ImageService imageService) {
         this.imageService = imageService;
@@ -78,6 +83,14 @@ public class ImageController {
 
         ImageMatrix resultMatrix = imageService.process(img1, img2, operation, value);
 
+        if ("histogram".equalsIgnoreCase(operation) || "equalization".equalsIgnoreCase(operation)) {
+            lastHistogram = new Histogram();
+            resultMatrix = lastHistogram.apply(img1);
+        } else {
+            lastHistogram = null;
+            resultMatrix = imageService.process(img1, img2, operation, value);
+        }
+
         BufferedImage resultImage = resultMatrix.toBufferedImage();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ImageIO.write(resultImage, "png", baos);
@@ -85,5 +98,19 @@ public class ImageController {
         return ResponseEntity.ok()
                 .contentType(MediaType.IMAGE_PNG)
                 .body(baos.toByteArray());
+    }
+
+        @GetMapping("/histogram-data")
+    public ResponseEntity<?> getHistogramData() {
+        if (lastHistogram == null) {
+            return ResponseEntity.badRequest()
+                    .body("Nenhum histograma disponível. Execute a equalização primeiro.");
+        }
+        
+        Map<String, int[]> response = new HashMap<>();
+        response.put("original", lastHistogram.getOriginalHistogram());
+        response.put("processed", lastHistogram.getProcessedHistogram());
+        
+        return ResponseEntity.ok(response);
     }
 }

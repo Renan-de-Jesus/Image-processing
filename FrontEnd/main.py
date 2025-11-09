@@ -3,6 +3,8 @@ from customtkinter import *
 from tkinter import filedialog
 from PIL import Image, ImageTk
 import requests
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 URL_API = "http://localhost:8080/api/image/process"
 CANVAS_WIDTH = 400
@@ -15,6 +17,7 @@ filePath2 = None
 currentImage1 = None
 currentImage2 = None
 currentResult = None
+histogramAvailable = False
 
 def OpenFile(validation):
     """Abre um arquivo de imagem e exibe no canvas apropriado"""
@@ -88,7 +91,7 @@ def SaveFile(filename):
 
 def ApplyEffect(effect, value=None):
     """Aplica um efeito na(s) imagem(ns) através da API"""
-    global currentImage1, currentImage2, currentResult
+    global currentImage1, currentImage2, currentResult, histogramAvailable
 
     operations_with_two_images = ["sum", "subtraction", "multiply", "divide", "difference", "blending", "media", "and", "or", "xor"]
     
@@ -111,6 +114,12 @@ def ApplyEffect(effect, value=None):
         
         if response.status_code == 200:
             DisplayResultImage(response.content)
+            if effect == "histogram" or effect == "equalization":
+                histogramAvailable = True
+                showHistogramButton.configure(state="normal")
+            else:
+                histogramAvailable = False
+                showHistogramButton.configure(state="disabled")
         else:
             print("Erro:", response.text)
     except Exception as e:
@@ -119,6 +128,58 @@ def ApplyEffect(effect, value=None):
         for file_tuple in files.values():
             if len(file_tuple) > 1:
                 file_tuple[1].close()
+                
+def ShowHistogram():
+    """Busca dados do histograma do back-end e exibe"""
+
+    
+    if not histogramAvailable:
+        print("Nenhum histograma disponível")
+        return
+    
+    try:
+        response = requests.get("http://localhost:8080/api/image/histogram-data")
+        
+        if response.status_code == 200:
+            data = response.json()
+            hist_original = data['original']
+            hist_processed = data['processed']
+            
+            hist_window = CTkToplevel(root)
+            hist_window.title("Comparação de Histogramas")
+            hist_window.geometry("1000x450")
+            
+            fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+            fig.patch.set_facecolor('#2b2b2b')
+            
+            ax1.bar(range(256), hist_original, width=1, color='#1f6aa5', alpha=0.8)
+            ax1.set_title('Histograma Original', color='white', fontsize=14, fontweight='bold')
+            ax1.set_xlabel('Intensidade (0-255)', color='white')
+            ax1.set_ylabel('Frequência', color='white')
+            ax1.set_xlim([0, 255])
+            ax1.set_facecolor('#1a1a1a')
+            ax1.tick_params(colors='white')
+            ax1.grid(True, alpha=0.2, color='white')
+            
+            ax2.bar(range(256), hist_processed, width=1, color='#28a745', alpha=0.8)
+            ax2.set_title('Histograma Equalizado', color='white', fontsize=14, fontweight='bold')
+            ax2.set_xlabel('Intensidade (0-255)', color='white')
+            ax2.set_ylabel('Frequência', color='white')
+            ax2.set_xlim([0, 255])
+            ax2.set_facecolor('#1a1a1a')
+            ax2.tick_params(colors='white')
+            ax2.grid(True, alpha=0.2, color='white')
+            
+            plt.tight_layout()
+            
+            canvas = FigureCanvasTkAgg(fig, master=hist_window)
+            canvas.draw()
+            canvas.get_tk_widget().pack(fill='both', expand=True, padx=10, pady=10)
+        else:
+            print("Erro ao buscar dados do histograma:", response.text)
+    
+    except Exception as e:
+        print(f"Erro: {e}")
 
 
 def PrepareOneImage(image):
@@ -329,6 +390,14 @@ histogramButton = CTkButton(
 )
 histogramButton.grid(row=9, column=2, padx=5, pady=(5, 10))
 
+showHistogramButton = CTkButton(
+    controlFrame, text="Exibir Histograma", 
+    command=ShowHistogram,
+    state="disabled",
+    width=150
+)
+showHistogramButton.grid(row=10, column=2, padx=10, pady=10)
+
 separator2 = CTkLabel(controlFrame, text="", height=20)
 separator2.grid(row=10, column=0, columnspan=2)
 
@@ -363,4 +432,13 @@ orButton = CTkButton(
 )
 orButton.grid(row=3, column=3, padx=5, pady=(5, 5))
 
+def on_closing():
+    try:
+        root.destroy()
+    except Exception as e:
+        print("Erro ao fechar janela:", e)
+    finally:
+        root.quit()
+
+root.protocol("WM_DELETE_WINDOW", on_closing)
 root.mainloop()
