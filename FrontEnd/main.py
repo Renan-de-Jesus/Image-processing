@@ -325,4 +325,11 @@ andButton = CTkButton(
 )
 andButton.grid(row=2, column=2, padx=5, pady=(5, 5))
 
+notButton = CTkButton(
+    controlFrame, text="NOT", 
+    command=lambda: ApplyEffect("not", 0),
+    width=150
+)
+notButton.grid(row=2, column=3, padx=5, pady=(5, 5))
+
 root.mainloop()

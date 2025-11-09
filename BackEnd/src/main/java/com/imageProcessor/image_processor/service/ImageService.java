@@ -65,6 +65,8 @@ public class ImageService {
                 return new Media().apply(img1, img2);
             case "and":
                 return new AndOperation().apply(img1, img2);
+            case "not":
+                return new NotOperation().apply(img1);
             default:
                 return img1;
         }
