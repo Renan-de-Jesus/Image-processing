@@ -63,6 +63,8 @@ public class ImageService {
                 return new Blending().apply(img1, img2, value);
             case "media":
                 return new Media().apply(img1, img2);
+            case "and":
+                return new AndOperation().apply(img1, img2);
             default:
                 return img1;
         }

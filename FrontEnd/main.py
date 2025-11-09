@@ -90,7 +90,7 @@ def ApplyEffect(effect, value=None):
     """Aplica um efeito na(s) imagem(ns) através da API"""
     global currentImage1, currentImage2, currentResult
 
-    operations_with_two_images = ["sum", "subtraction", "multiply", "divide", "difference", "blending", "media"]
+    operations_with_two_images = ["sum", "subtraction", "multiply", "divide", "difference", "blending", "media", "and"]
     
     files = {}
     data = {
@@ -314,5 +314,15 @@ mediaButton = CTkButton(
     width=150
 )
 mediaButton.grid(row=9, column=0, padx=5, pady=(5, 10))
+
+separator2 = CTkLabel(controlFrame, text="", height=20)
+separator2.grid(row=10, column=0, columnspan=2)
+
+andButton = CTkButton(
+    controlFrame, text="AND", 
+    command=lambda: ApplyEffect("and", 0),
+    width=150
+)
+andButton.grid(row=2, column=2, padx=5, pady=(5, 5))
 
 root.mainloop()
