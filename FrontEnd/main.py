@@ -318,6 +318,9 @@ mediaButton.grid(row=9, column=0, padx=5, pady=(5, 10))
 separator2 = CTkLabel(controlFrame, text="", height=20)
 separator2.grid(row=10, column=0, columnspan=2)
 
+labelLogical = CTkLabel(controlFrame, text="Operações Lógicas", font=("Arial", 12, "bold"))
+labelLogical.grid(row=1, column=2, columnspan=2, pady=(10, 5))
+
 andButton = CTkButton(
     controlFrame, text="AND", 
     command=lambda: ApplyEffect("and", 0),
