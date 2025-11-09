@@ -61,6 +61,8 @@ public class ImageService {
                 return new Difference().apply(img1, img2);
             case "blending":
                 return new Blending().apply(img1, img2, value);
+            case "media":
+                return new Media().apply(img1, img2);
             default:
                 return img1;
         }
