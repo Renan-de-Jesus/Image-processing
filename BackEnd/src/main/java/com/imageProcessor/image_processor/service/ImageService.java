@@ -63,6 +63,8 @@ public class ImageService {
                 return new Blending().apply(img1, img2, value);
             case "media":
                 return new Media().apply(img1, img2);
+            case "threshold":
+                return new Threshold().apply(img1, value);
             case "and":
                 return new AndOperation().apply(img1, img2);
             case "not":

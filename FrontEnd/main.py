@@ -315,6 +315,13 @@ mediaButton = CTkButton(
 )
 mediaButton.grid(row=9, column=0, padx=5, pady=(5, 10))
 
+tresholdButton = CTkButton(
+    controlFrame, text="Limiar", 
+    command=lambda: ApplyEffect("threshold", inputValue.get()),
+    width=150
+)
+tresholdButton.grid(row=9, column=1, padx=5, pady=(5, 10))
+
 separator2 = CTkLabel(controlFrame, text="", height=20)
 separator2.grid(row=10, column=0, columnspan=2)
 
